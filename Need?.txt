@@ -1,0 +1,10 @@
+| Existing Concept                           | Example                                                      | Limitation Compared to Your Idea                                   |
+| ------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------------ |
+| **Prompt Optimizers**                      | Anthropic’s *Prompt Engineering Tools*, OpenAI’s *Rephraser* | Post-hoc rewriters — still trigger the full model.                 |
+| **Retrieval Filters**                      | RAG, vector DBs                                              | Retrieve facts, not *intent*. No “clarity check” before reasoning. |
+| **Guardrails / Safety Layers**             | Microsoft’s *Prompt Shields*, GuardrailsAI                   | Focused on safety, not semantic economy.                           |
+| **Routing LLMs (Mixture-of-Experts)**      | Google Gemini, DeepMind GLaM                                 | Route between *models*, not between *query readiness levels*.      |
+| **Intent Detection Models (for chatbots)** | Dialogflow, Rasa                                             | Work only on narrow domains; don’t reason semantically.            |
+
+
+data based on research conducted in late 2025 and early 2026. Could be stale, will run the metrics again.
