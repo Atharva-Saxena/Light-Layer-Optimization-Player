@@ -1,0 +1,15 @@
+Length
+
+Typos
+
+Entropy
+
+Named entities
+
+Question structure
+
+Code blocks
+
+Ambiguity
+
+Intent confidence

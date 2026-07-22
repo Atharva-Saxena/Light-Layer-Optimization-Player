@@ -1,0 +1,610 @@
+An Adaptive Inference Operating System for Large Language Models
+
+
+It is an AI middleware / operating system that sits between users and Large Language Models.
+
+Instead of sending every prompt directly to an expensive LLM, Hermes determines:
+
+Does this request actually need an LLM?
+Which model should answer?
+Can the prompt be improved first?
+Can another deterministic algorithm answer instead?
+How much reasoning budget should this request receive?
+
+The philosophy is:
+
+Think proportionally to the problem.
+
+Not every question deserves GPT-5 level inference.
+
+Motivation
+
+Current AI systems follow a simplistic architecture:
+
+User
+    ↓
+Large Language Model
+    ↓
+Answer
+
+This causes several issues:
+
+unnecessary token consumption
+higher inference costs
+increased latency
+hallucinations due to vague prompts
+unnecessary energy usage
+poor routing of deterministic tasks
+
+Hermes replaces this with intelligent orchestration.
+
+High Level Architecture
+                User
+                  │
+                  ▼
+          Prompt Gateway
+                  │
+        ┌─────────┴─────────┐
+        │                   │
+        ▼                   ▼
+ Prompt Analysis      Intent Analysis
+        │                   │
+        └─────────┬─────────┘
+                  ▼
+          Decision Engine
+                  │
+   ┌──────────┬──────────────┬─────────────┐
+   │          │              │             │
+   ▼          ▼              ▼             ▼
+Rewrite    Clarify      Deterministic     Heavy LLM
+Prompt     User         Tool/API          (GPT etc.)
+Core Philosophy
+
+Hermes treats LLM inference as an expensive computational resource.
+
+Exactly like an operating system manages CPU time, memory and IO,
+
+Hermes manages
+
+reasoning
+token budget
+model selection
+prompt quality
+compute allocation
+
+Hence:
+
+Atax is an Operating System for Inference.
+
+Central Research Question
+
+Can a lightweight algorithmic middleware significantly reduce LLM cost while maintaining or improving response quality?
+
+This is the hypothesis the project attempts to validate.
+
+Major Components
+1. Prompt Gateway
+
+Responsible for receiving every prompt.
+
+Tasks:
+
+normalization
+whitespace cleanup
+typo detection
+language detection
+formatting
+profanity filtering
+metadata extraction
+
+No LLM involved.
+
+Pure algorithms.
+
+2. Prompt Quality Engine
+
+Purpose:
+
+Determine whether the prompt contains sufficient information.
+
+Produces:
+
+Prompt Quality Score
+
+0 — 100
+
+Potential Features
+
+prompt length
+lexical diversity
+ambiguity score
+grammar quality
+typo count
+code block presence
+named entities
+intent confidence
+information density
+missing contextual clues
+
+Initially implemented using algorithms.
+
+Later versions may use ML.
+
+3. Intent Classifier
+
+Classifies requests into categories.
+
+Example
+
+Programming
+
+Math
+
+Writing
+
+Translation
+
+Research
+
+Search
+
+Summarization
+
+Debugging
+
+Conversation
+
+Planning
+
+Creative
+
+Uses
+
+Tiny transformer
+
+or
+
+DistilBERT
+
+instead of expensive LLMs.
+
+4. Complexity Predictor
+
+Predicts computational difficulty before inference.
+
+Example
+
+Reverse a string
+
+↓
+
+Estimated Tokens
+
+150
+Explain Attention Mechanisms
+
+↓
+
+Estimated Tokens
+
+1800
+
+Possible implementations
+
+Regression model
+
+Decision trees
+
+Gradient boosting
+
+Small neural network
+
+Future versions:
+
+Train directly on production data.
+
+5. Decision Engine
+
+Heart of Hermes.
+
+Inputs
+
+Prompt Quality
+
+Intent
+
+Complexity
+
+Routing Rules
+
+Outputs
+
+Rewrite
+
+Clarify
+
+Route to Tool
+
+Route to Small Model
+
+Route to Large Model
+
+This module replaces blind inference.
+
+6. Prompt Rewriter
+
+Improves prompts before inference.
+
+Can use
+
+templates
+
+heuristics
+
+small seq2seq models
+
+Example
+
+Input
+
+Explain Java
+
+Output
+
+Explain Java focusing on:
+
+• JVM
+
+• OOP
+
+• Collections
+
+• Memory Management
+
+Beginner Friendly.
+
+Goal
+
+Improve input quality
+
+without invoking GPT.
+
+7. Clarification Layer
+
+If confidence falls below threshold,
+
+Hermes asks
+
+minimal
+
+targeted
+
+clarification questions.
+
+Example
+
+Do you want Java or Python?
+
+
+instead of
+
+allowing hallucination.
+
+Important
+
+This should be used sparingly.
+
+Automatic rewriting takes precedence.
+
+8. Routing Engine
+
+Instead of sending everything to GPT
+
+it intelligently routes.
+
+Example
+
+Math
+
+↓
+
+Calculator
+
+Weather
+
+↓
+
+Weather API
+
+Translation
+
+↓
+
+Translation Model
+
+SQL
+
+↓
+
+Database
+
+Programming
+
+↓
+
+GPT
+
+Simple FAQ
+
+↓
+
+Vector Search
+
+Future
+
+Multiple LLMs
+
+Claude
+
+Gemini
+
+GPT
+
+Llama
+
+Mistral
+
+chosen dynamically.
+
+9. Heavy LLM
+
+Only activated when required.
+
+Receives
+
+high quality
+
+validated
+
+context enriched prompts.
+
+Goal
+
+Minimize unnecessary calls.
+
+10. Metrics Engine
+
+One of the most important modules.
+
+Collect
+
+Latency
+
+Tokens
+
+Estimated Cost
+
+Routing Decision
+
+Prompt Score
+
+Hallucination Rate
+
+Clarification Frequency
+
+Acceptance Rate
+
+User Feedback
+
+Heavy LLM Usage
+
+11. Dashboard
+
+Visualize
+
+Average Prompt Quality
+
+Average Latency
+
+Heavy Model Calls
+
+Cost Savings
+
+Token Savings
+
+Routing Distribution
+
+Prompt Categories
+
+Failure Cases
+
+Project Philosophy
+
+Algorithms First.
+
+Machine Learning Second.
+
+LLMs Last.
+
+Every module should justify its computational cost.
+
+If an algorithm performs equally well,
+
+do not replace it with AI.
+
+Technology Stack
+
+Backend
+
+FastAPI
+
+Python
+
+Pydantic
+
+AsyncIO
+
+Machine Learning
+
+PyTorch
+
+Transformers
+
+Sentence Transformers
+
+Scikit-Learn
+
+XGBoost
+
+Embeddings
+
+all-MiniLM-L6-v2
+
+FAISS
+
+Chroma
+
+Qdrant
+
+LLM APIs
+
+OpenAI
+
+Gemini
+
+Anthropic
+
+OpenRouter
+
+Frontend
+
+React
+
+NextJS
+
+Tailwind
+
+Visualization
+
+Grafana
+
+Prometheus
+
+Plotly
+
+Storage
+
+PostgreSQL
+
+Redis
+
+Docker
+
+Deployment
+
+Docker
+
+Kubernetes (future)
+
+GitHub Actions
+
+Benchmark Plan
+
+Every prompt executes in two modes.
+
+Baseline
+
+User
+
+↓
+
+GPT
+
+↓
+
+Answer
+
+Atax
+
+User
+
+↓
+
+atax
+
+↓
+
+GPT
+
+↓
+
+Answer
+
+Compare
+
+Latency
+
+Token Usage
+
+Cost
+
+Prompt Quality
+
+Answer Quality
+
+Routing
+
+User Satisfaction
+
+Heavy Model Usage
+
+Future Research
+
+Dynamic reasoning budgets
+
+Adaptive compute allocation
+
+Hallucination prediction
+
+Inference cost prediction
+
+Automatic model selection
+
+Reasoning compression
+
+Adaptive token budgeting
+
+Prompt entropy estimation
+
+Context compression
+
+Mixture-of-Experts routing
+
+Semantic operating systems
+
+Inference operating systems
+
+Long-Term Vision
+
+Hermes evolves into an inference operating system capable of making intelligent decisions about AI computation before expensive reasoning occurs.
+
+Rather than replacing LLMs, Hermes optimizes their usage.
+
+The ultimate goal is to treat AI inference as a managed computational resource in the same way operating systems manage CPU scheduling, memory allocation, and process execution.
+
+One Final Suggestion
+
+After revisiting our whole discussion with the benefit of your ML knowledge, I would make one strategic change.
+
+I would remove the emphasis on "prompt optimization" from the project's identity.
+
+That's a feature, not the product.
+
+The product is Inference Orchestration.
+
+Prompt rewriting.
+Routing.
+Budget prediction.
+Complexity estimation.
+Cost optimization.
+Model selection.
